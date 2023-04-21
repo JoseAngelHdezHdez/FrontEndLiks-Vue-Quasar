@@ -2,25 +2,26 @@
   <q-page class="row justify-center">
     <div class="col-12 col-sm-6 col-md-5">
       <h3>Login</h3>
-      <q-form
-      @submit.prevent="handleSubmit"
-      >
+      <q-form @submit.prevent="handleSubmit">
         <q-input
-        v-model="email"
-        label="Ingrese email"
-        type="text"
-        :rules="[
-          (val) => (val && /^[^@]+@[^@]+\.[a-zA-Z]{2,}$/.test(val)) || 'Escriba un email correcto',
-        ]"
+          v-model="email"
+          label="Ingrese email"
+          type="text"
+          :rules="[
+            (val) =>
+              (val && /^[^@]+@[^@]+\.[a-zA-Z]{2,}$/.test(val)) ||
+              'Escriba un email correcto',
+          ]"
         ></q-input>
 
         <q-input
-        v-model="password"
-        label="Ingrese contraseña"
-        type="password"
-        :rules="[
-          (val) => val && val.length > 6 || 'Contraseña minimo de 6 caracteres ',
-        ]"
+          v-model="password"
+          label="Ingrese contraseña"
+          type="password"
+          :rules="[
+            (val) =>
+              (val && val.length > 6) || 'Contraseña minimo de 6 caracteres ',
+          ]"
         ></q-input>
 
         <div>
@@ -32,44 +33,43 @@
 </template>
 
 <script setup>
-import { useUserStore } from 'src/stores/user-store';
-import { useRouter } from 'vue-router';
-import { ref } from 'vue';
-import useQuasar from 'quasar/src/composables/use-quasar.js';
+import { useUserStore } from "src/stores/user-store";
+import { useRouter } from "vue-router";
+import { ref } from "vue";
+import useQuasar from "quasar/src/composables/use-quasar.js";
 
 const router = useRouter();
 const $q = useQuasar();
 const userStore = useUserStore();
 
-const email = ref('');
-const password = ref('');
+const email = ref("");
+const password = ref("");
 
 const handleSubmit = async () => {
   try {
-    console.log("Paso las validaciones")
+    console.log("Paso las validaciones");
     await userStore.access(email.value, password.value);
-    router.push('/');
-    email.value = '';
-    password.value = '';
+    router.push("/");
+    email.value = "";
+    password.value = "";
   } catch (error) {
-    console.log("error", error.error)
+    console.log("error", error.error);
     if (error.error) {
-      alertDialogBackend(error.error)
-    } else if (error.errors[0].msg){
-      alertDialogBackend(error.errors[0].msg)
+      alertDialogBackend(error.error);
+    } else if (error.errors[0].msg) {
+      alertDialogBackend(error.errors[0].msg);
     } else {
-      alertDialogBackend()
+      alertDialogBackend();
     }
   }
 };
 
-const alertDialogBackend = (message = 'Error en el servidor') => {
+const alertDialogBackend = (message = "Error en el servidor") => {
   $q.dialog({
     title: "Error",
-    message
-  })
-}
-
+    message,
+  });
+};
 </script>
 
 <style scoped></style>

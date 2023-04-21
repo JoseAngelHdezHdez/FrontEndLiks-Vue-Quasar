@@ -76,7 +76,7 @@ export const useUserStore = defineStore("user", () => {
     try {
       console.log("Refresh")
       const res = await api.get("/auth/refresh");
-      console.log(res.data);
+      // console.log(res.data);
       token.value = res.data.token;
       expiresIn.value = res.data.expiresIn;
       sessionStorage.setItem('user', true)
